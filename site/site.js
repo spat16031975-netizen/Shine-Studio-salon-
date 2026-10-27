@@ -590,3 +590,10 @@ addEventListener('load',fit);setTimeout(fit,400);
 })();
 
 (function(){var r=document.documentElement;if(!r.classList.contains('t1'))return;function u(){try{r.classList.toggle('tk-off',window.scrollY>window.innerHeight*0.5)}catch(e){}}window.addEventListener('scroll',u,{passive:true});u()})();
+(function(){if(!document.documentElement.classList.contains('t1'))return;var bs=[].slice.call(document.querySelectorAll('.fq-b'));if(!bs.length)return;
+function closeAll(){bs.forEach(function(x){x.setAttribute('aria-expanded','false')})}
+document.addEventListener('click',function(e){var q=e.target.closest&&e.target.closest('.fq');if(!q){closeAll();return}
+if(e.target.closest('.fq-p')){var b=q.querySelector('.fq-b');if(b)b.setAttribute('aria-expanded','false')}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll()});
+var s=document.getElementById('faq');if(s&&'IntersectionObserver' in window){new IntersectionObserver(function(en){if(!en[0].isIntersecting)closeAll()},{threshold:0}).observe(s)}
+})();
