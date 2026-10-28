@@ -36,7 +36,7 @@ function drawPanel(){var d=D[cur];panel.id='prpanel';panel.setAttribute('aria-la
     return '<label class="pr-row"><input type="checkbox" data-k="'+k+'"'+(sel[k]?' checked':'')+'><span class="pr-n">'+it.n+(it.m?'<small>Мастер: '+it.m+'</small>':'')+'</span><span class="pr-p">'+fm(it.p)+' BYN</span></label>'}).join('')+'</div>'}).join('')+'</div>'}
 function items(){var out=[];Object.keys(sel).forEach(function(k){var a=k.split('|'),it=D[a[0]].g[a[1]].i[a[2]];out.push(it)});return out}
 function sum(){var it=items(),t=it.reduce(function(s,x){return s+x.p},0);
-  document.getElementById('sumList').textContent=it.length?it.map(function(x){return x.n}).join(' · '):'Пока ничего не выбрано';
+  var sl=document.getElementById('sumList');if(it.length){sl.innerHTML=Object.keys(sel).map(function(k){var a=k.split('|'),x=D[a[0]].g[a[1]].i[a[2]];return '<span class="sl-chip"><span>'+x.n+'</span><button type="button" data-rm="'+k+'" aria-label="Убрать из выбора: '+x.n.replace(/"/g,'')+'">×</button></span>'}).join('')}else sl.textContent='Пока ничего не выбрано';var rb=document.getElementById('sumReset');if(rb)rb.hidden=!it.length;
   document.getElementById('sumTotal').textContent=fm(t)+' BYN';
   document.getElementById('sumDisc').textContent=it.length?'С первым визитом −10%: '+fm(t*.9)+' BYN':'С первым визитом −10% будет ниже';
   window.__calc=it.map(function(x){return {name:x.n,from:x.p}});window.__calcTotal=t;
@@ -48,6 +48,10 @@ function sum(){var it=items(),t=it.reduce(function(s,x){return s+x.p},0);
   else if(fc){fc.hidden=!it.length;fc.textContent=it.length?'Ваш набор: '+it.map(function(x){return x.n}).join(', ')+'. Итого '+fm(t)+' BYN (−10% на первый визит: '+fm(t*.9)+' BYN).':''}
   var fx=document.getElementById('fCalcX');if(fx&&fc)fx.hidden=fc.hidden}
 tabs.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;cur=+b.dataset.i;drawTabs();drawPanel()});
+(function(){var sl=document.getElementById('sumList'),t=document.querySelector('.pr-sum-t');if(!sl||!t)return;
+var rb=document.createElement('button');rb.type='button';rb.id='sumReset';rb.className='sl-reset';rb.textContent='Сбросить всё';rb.hidden=true;t.appendChild(rb);
+rb.addEventListener('click',function(){document.dispatchEvent(new CustomEvent('reset-calc'))});
+sl.addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(!b)return;delete sel[b.dataset.rm];drawPanel();sum()})})();
 tabs.addEventListener('keydown',function(e){if(e.key!=='ArrowDown'&&e.key!=='ArrowUp'&&e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;e.preventDefault();cur=(cur+(e.key==='ArrowDown'||e.key==='ArrowRight'?1:D.length-1))%D.length;drawTabs();drawPanel();document.getElementById('tab'+cur).focus()});
 panel.addEventListener('change',function(e){var k=e.target.dataset.k;if(!k)return;window.__master=null;window.__looks=null;if(e.target.checked)sel[k]=1;else delete sel[k];sum()});
 document.addEventListener('pick-master',function(e){sel={};window.__looks=null;window.__master=e.detail;drawPanel();sum()});
@@ -321,7 +325,7 @@ addEventListener('load',fit);setTimeout(fit,400);
   var it=[].slice.call(a.children),info=[].slice.call(document.querySelectorAll('.mi')),leg=[].slice.call(document.querySelectorAll('.mx-legacy .mx-t'));
   it.forEach(function(c,i){c.style.setProperty('--i',i)});
   function go(i){it.forEach(function(c,k){c.classList.toggle('on',k===i);c.setAttribute('aria-pressed',k===i)});info.forEach(function(m,k){m.classList.toggle('on',k===i)});if(leg[i])leg[i].click()}
-  it.forEach(function(c,i){c.addEventListener('click',function(){go(i)});c.addEventListener('mouseenter',function(){if(matchMedia('(hover:hover)').matches&&!c.classList.contains('on'))go(i)});c.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowLeft'){var n=(i+(e.key==='ArrowRight'?1:-1)+it.length)%it.length;go(n);it[n].focus()}})});
+  it.forEach(function(c,i){c.addEventListener('click',function(){go(i)});c.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowLeft'){var n=(i+(e.key==='ArrowRight'?1:-1)+it.length)%it.length;go(n);it[n].focus()}})});
   document.addEventListener('click',function(e){var b=e.target.closest('.mi-go');if(!b)return;var p=document.querySelector('.mx-legacy #mxp'+b.dataset.i+' .mx-txt .btn');if(p)p.click()});
   if(!('IntersectionObserver' in window)){a.classList.add('shelf-in');return}
   var o=new IntersectionObserver(function(e){if(e[0].isIntersecting){a.classList.add('shelf-in');o.disconnect()}},{threshold:.25});o.observe(a);
@@ -358,9 +362,10 @@ addEventListener('load',fit);setTimeout(fit,400);
 })();
 (function(){var box=document.querySelector('.ab-facts');if(!box)return;
   var ns=[].slice.call(box.querySelectorAll('[data-num]'));if(!ns.length||!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-  ns.forEach(function(e){e.textContent='0'});
-  function run(e,delay){var to=+e.dataset.num,d=1700;setTimeout(function(){var t0=performance.now();(function f(t){var k=Math.min(1,(t-t0)/d),v=1-Math.pow(1-k,4);e.textContent=Math.round(to*v);if(k<1)requestAnimationFrame(f)})(t0)},delay)}
-  var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();ns.forEach(function(e,i){run(e,i*140)})}},{threshold:.35});io.observe(box);
+  var tm=[],raf=[];ns.forEach(function(e){e.textContent='0'});
+  function stop(){tm.forEach(clearTimeout);raf.forEach(cancelAnimationFrame);tm=[];raf=[]}
+  function run(e,delay){var to=+e.dataset.num,d=2200;tm.push(setTimeout(function(){var t0=performance.now();(function f(t){var k=Math.min(1,(t-t0)/d),v=1-Math.pow(1-k,3);e.textContent=Math.round(to*v);if(k<1)raf.push(requestAnimationFrame(f))})(t0)},delay))}
+  var io=new IntersectionObserver(function(es){var v=es[0].isIntersecting;stop();if(v){ns.forEach(function(e,i){e.textContent='0';run(e,i*160)})}else ns.forEach(function(e){e.textContent='0'})},{threshold:.3});io.observe(box);
 })();
 
 /* ====== Лента работ (вариант 1) ====== */
