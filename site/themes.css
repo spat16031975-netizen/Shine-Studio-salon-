@@ -996,3 +996,10 @@ html.t1.demo-min .demo-b i{margin:0}
 html.t1.demo-min .demo-p{margin-top:2px}
 html.t1.demo-min .demo-flag{flex-direction:column-reverse}
 html.t1 .top .btn-sm,html.t1 header .btn-sm{display:none}
+
+/* мастера: компактнее блок справа, выбранная карточка закреплена */
+html.t1 .mi h3{font-size:clamp(30px,5.4svh,52px)}
+html.t1 .mi p{font-size:clamp(14px,1.9svh,16px);max-width:34ch}
+html.t1 .mi .mx-r{font-size:11px;padding:5px 11px}
+html.t1 .mi .btn{transform:scale(.88);transform-origin:left center}
+html.t1 .mx-acc.pinned .ac-i.on{box-shadow:0 26px 50px -20px rgba(217,174,111,.7),inset 0 0 0 2px rgba(255,220,150,.8)}
