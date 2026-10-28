@@ -995,3 +995,4 @@ html.t1.demo-min .demo-b{font-size:0;gap:0;padding:7px;width:30px;height:30px;ju
 html.t1.demo-min .demo-b i{margin:0}
 html.t1.demo-min .demo-p{margin-top:2px}
 html.t1.demo-min .demo-flag{flex-direction:column-reverse}
+html.t1 .top .btn-sm,html.t1 header .btn-sm{display:none}
