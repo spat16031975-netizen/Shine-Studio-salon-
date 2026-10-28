@@ -70,7 +70,7 @@ var LEAD_URL='';   /* сюда адрес приёма заявок (Telegram-б
 var YM_ID='';      /* сюда номер счётчика Яндекс Метрики */
 var f=document.getElementById('leadForm');if(!f)return;
 var name=document.getElementById('f-name'),phone=document.getElementById('f-phone'),cons=document.getElementById('f-consent'),btn=document.getElementById('fBtn'),err=document.getElementById('fErr'),ok=document.getElementById('fOk');
-function mask(){var d=phone.value.replace(/\D/g,'');if(d.indexOf('375')===0)d=d.slice(3);else if(d.indexOf('80')===0)d=d.slice(2);d=d.slice(0,9);var s='';if(d){s='+375 ('+d.slice(0,2);if(d.length>=2)s+=')';if(d.length>2)s+=' '+d.slice(2,5);if(d.length>5)s+='-'+d.slice(5,7);if(d.length>7)s+='-'+d.slice(7,9)}phone.value=s}
+function mask(){var d=phone.value.replace(/\D/g,'');for(var k=0;k<3;k++){if(d.indexOf('375')===0)d=d.slice(3);else if(d.indexOf('80')===0)d=d.slice(2);else if(d.charAt(0)==='8'&&d.length>9)d=d.slice(1)}d=d.slice(0,9);var s='';if(d){s='+375 ('+d.slice(0,2);if(d.length>=2)s+=')';if(d.length>2)s+=' '+d.slice(2,5);if(d.length>5)s+='-'+d.slice(5,7);if(d.length>7)s+='-'+d.slice(7,9)}phone.value=s}
 phone.addEventListener('input',mask);
 phone.addEventListener('focus',function(){if(!phone.value)phone.value='+375 ('});
 cons.addEventListener('change',function(){btn.disabled=!cons.checked});
@@ -84,9 +84,12 @@ f.addEventListener('submit',function(e){e.preventDefault();err.hidden=true;
   console.log('Заявка',data);
   if(LEAD_URL){try{fetch(LEAD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(function(){})}catch(x){}}
   if(YM_ID&&window.ym){try{window.ym(YM_ID,'reachGoal','lead')}catch(x){}}
+  var bs=btn.querySelector('span'),bt=bs?bs.textContent:'';if(bs)bs.textContent='Отправляем…';btn.disabled=true;
+  setTimeout(function(){if(bs)bs.textContent=bt;
   btn.hidden=true;ok.hidden=false;f.querySelectorAll('input').forEach(function(i){i.disabled=true});
   document.dispatchEvent(new CustomEvent('reset-calc'));
   setTimeout(function(){name.value='';phone.value='';cons.checked=false;document.getElementById('f-ads').checked=false;f.querySelectorAll('input').forEach(function(i){i.disabled=false});btn.disabled=true;btn.hidden=false;ok.hidden=true},9000);
+  },900);
 });
 })();
 
@@ -596,4 +599,14 @@ document.addEventListener('click',function(e){var q=e.target.closest&&e.target.c
 if(e.target.closest('.fq-p')){var b=q.querySelector('.fq-b');if(b)b.setAttribute('aria-expanded','false')}});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll()});
 var s=document.getElementById('faq');if(s&&'IntersectionObserver' in window){new IntersectionObserver(function(en){if(!en[0].isIntersecting)closeAll()},{threshold:0}).observe(s)}
+})();
+
+(function(){var b=document.querySelector('.cond-b'),p=document.getElementById('condP');if(!b||!p)return;
+function pos(){var r=b.getBoundingClientRect();p.style.left=Math.max(16,Math.min(r.left,innerWidth-p.offsetWidth-16))+'px';var below=r.bottom+p.offsetHeight+90<innerHeight;p.style.top=(below?r.bottom+16:r.top-p.offsetHeight-14)+'px'}
+document.body.appendChild(p);
+function close(){p.hidden=true;b.setAttribute('aria-expanded','false')}
+b.addEventListener('click',function(e){e.stopPropagation();var o=p.hidden;p.hidden=!o;b.setAttribute('aria-expanded',String(o));if(o)pos()});
+document.addEventListener('click',function(e){if(!p.hidden&&!p.contains(e.target))close()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+window.addEventListener('scroll',function(){if(!p.hidden)close()},{passive:true});
 })();
