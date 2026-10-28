@@ -615,3 +615,5 @@ document.addEventListener('click',function(e){if(!p.hidden&&!p.contains(e.target
 document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
 window.addEventListener('scroll',function(){if(!p.hidden)close()},{passive:true});
 })();
+
+(function(){var r=document.documentElement;if(!r.classList.contains('t1'))return;var on=false;function u(){var m=window.scrollY>140;if(m!==on){on=m;r.classList.toggle('demo-min',m)}}window.addEventListener('scroll',u,{passive:true});u()})();
