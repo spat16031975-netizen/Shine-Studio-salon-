@@ -1003,3 +1003,5 @@ html.t1 .mi p{font-size:clamp(14px,1.9svh,16px);max-width:34ch}
 html.t1 .mi .mx-r{font-size:11px;padding:5px 11px}
 html.t1 .mi .btn{transform:scale(.88);transform-origin:left center}
 html.t1 .mx-acc.pinned .ac-i.on{box-shadow:0 26px 50px -20px rgba(217,174,111,.7),inset 0 0 0 2px rgba(255,220,150,.8)}
+/* мастера: фото закрывает рамку целиком, без пустоты сверху */
+html.t1 .mx-acc .ac-i.on img{height:100%;width:100%;left:0;top:0;bottom:auto;transform:none;object-fit:cover;object-position:50% 8%}
