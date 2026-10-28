@@ -966,3 +966,6 @@ html.t1 .sl-chip button{all:unset;cursor:pointer;width:22px;height:22px;display:
 html.t1 .sl-chip button:hover{background:rgba(232,197,144,.5)}
 html.t1 #reviews{position:relative;z-index:1;overflow:clip}
 html.t1 #how{position:relative;z-index:0}
+html.t1 .mx-acc .ac-i.on img{object-fit:cover;object-position:50% 8%}
+html.t1 .promo-t i{margin-right:.45em}
+html.t1 .mx-acc .ac-i{background:#2b2015}
