@@ -74,10 +74,10 @@ var LEAD_URL='';   /* сюда адрес приёма заявок (Telegram-б
 var YM_ID='';      /* сюда номер счётчика Яндекс Метрики */
 var f=document.getElementById('leadForm');if(!f)return;
 var name=document.getElementById('f-name'),phone=document.getElementById('f-phone'),cons=document.getElementById('f-consent'),btn=document.getElementById('fBtn'),err=document.getElementById('fErr'),ok=document.getElementById('fOk');
-function mask(){var d=phone.value.replace(/\D/g,'');for(var k=0;k<3;k++){if(d.indexOf('375')===0)d=d.slice(3);else if(d.indexOf('80')===0)d=d.slice(2);else if(d.charAt(0)==='8'&&d.length>9)d=d.slice(1)}d=d.slice(0,9);var s='';if(d){s='+375 ('+d.slice(0,2);if(d.length>=2)s+=')';if(d.length>2)s+=' '+d.slice(2,5);if(d.length>5)s+='-'+d.slice(5,7);if(d.length>7)s+='-'+d.slice(7,9)}phone.value=s}
+function mask(){if(/^\s*\+/.test(phone.value)&&!/^\s*\+\s*3?7?5?\s*\(?\s*$/.test(phone.value)&&!/^\s*\+\s*375/.test(phone.value)&&!/^\s*\+\s*3(7(5)?)?$/.test(phone.value)){phone.value='';err.textContent='Принимаем номера Беларуси: +375 (XX) XXX-XX-XX.';err.hidden=false;return}err.hidden=true;var pm=phone.value.match(/^\s*\+(\d{1,3})\s*$/);if(pm&&'375'.indexOf(pm[1])===0){phone.value='+375 (';return}var d=phone.value.replace(/\D/g,'');for(var k=0;k<3;k++){if(d.indexOf('375')===0)d=d.slice(3);else if(d.indexOf('80')===0)d=d.slice(2);else if(d.charAt(0)==='8'&&d.length>9)d=d.slice(1)}d=d.slice(0,9);var s='';if(d){s='+375 ('+d.slice(0,2);if(d.length>=2)s+=')';if(d.length>2)s+=' '+d.slice(2,5);if(d.length>5)s+='-'+d.slice(5,7);if(d.length>7)s+='-'+d.slice(7,9)}phone.value=s}
 phone.addEventListener('input',mask);
 phone.addEventListener('focus',function(){if(!phone.value)phone.value='+375 ('});
-cons.addEventListener('change',function(){btn.disabled=!cons.checked});
+var hint=document.getElementById('fHint');cons.addEventListener('change',function(){btn.disabled=!cons.checked;if(hint)hint.hidden=cons.checked});
 f.addEventListener('submit',function(e){e.preventDefault();err.hidden=true;
   if(!cons.checked){return}
   var n=name.value.trim(),d=phone.value.replace(/\D/g,'');
@@ -92,7 +92,7 @@ f.addEventListener('submit',function(e){e.preventDefault();err.hidden=true;
   setTimeout(function(){if(bs)bs.textContent=bt;
   btn.hidden=true;ok.hidden=false;f.querySelectorAll('input').forEach(function(i){i.disabled=true});
   document.dispatchEvent(new CustomEvent('reset-calc'));
-  setTimeout(function(){name.value='';phone.value='';cons.checked=false;document.getElementById('f-ads').checked=false;f.querySelectorAll('input').forEach(function(i){i.disabled=false});btn.disabled=true;btn.hidden=false;ok.hidden=true},9000);
+  setTimeout(function(){name.value='';phone.value='';cons.checked=false;document.getElementById('f-ads').checked=false;f.querySelectorAll('input').forEach(function(i){i.disabled=false});btn.disabled=true;btn.hidden=false;ok.hidden=true;if(hint)hint.hidden=false},9000);
   },900);
 });
 })();
