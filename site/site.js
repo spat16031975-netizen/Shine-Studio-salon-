@@ -611,3 +611,9 @@ window.addEventListener('scroll',function(){if(!p.hidden)close()},{passive:true}
 })();
 
 (function(){var r=document.documentElement;if(!r.classList.contains('t1'))return;var on=false;function u(){var m=window.scrollY>140;if(m!==on){on=m;r.classList.toggle('demo-min',m)}}window.addEventListener('scroll',u,{passive:true});u()})();
+
+/* ====== Нижняя панель: прячется, пока человек вводит текст ====== */
+(function(){var r=document.documentElement,t=null;
+document.addEventListener('focusin',function(e){if(e.target.matches&&e.target.matches('input:not([type=checkbox]),textarea,select')){clearTimeout(t);r.classList.add('kb')}});
+document.addEventListener('focusout',function(){clearTimeout(t);t=setTimeout(function(){r.classList.remove('kb')},250)});
+})();

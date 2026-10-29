@@ -1054,3 +1054,57 @@ html.t1 .demo-note{margin:10px 0 0;font-size:12.5px;line-height:1.4;color:var(--
   html.t1 .faq-ph img{aspect-ratio:16/10;height:auto;border-radius:20px;box-shadow:0 24px 50px -34px rgba(0,0,0,.8)}
   html.t1 .faq-ph figcaption{position:static;margin-top:10px;border-radius:18px;background:#17130f;border:1px solid var(--line);backdrop-filter:none;-webkit-backdrop-filter:none}
 }
+
+/* ===== Правки v96: телефон ===== */
+html.t1 .dock{display:none}
+@media (max-width:820px){
+  :root{--dock:64px}
+  /* нижняя панель: всегда на виду */
+  html.t1 .dock{position:fixed;left:0;right:0;bottom:0;z-index:700;display:flex;gap:10px;align-items:center;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(15,12,8,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--line);transition:transform .25s}
+  html.t1 .dock .btn{flex:1.3 1 0;min-height:46px;justify-content:center;font-size:15px;padding:0 12px}
+  html.t1 .dock-2{flex:1 1 0;min-height:46px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--accent);border-radius:999px;color:var(--accent);font:600 15px/1 var(--f-text);text-decoration:none;text-align:center;padding:0 10px}
+  html.t1 .dock-2:active{background:var(--accent);color:#1b1410}
+  html.t1.kb .dock{transform:translateY(110%)}
+  html.t1 body{padding-bottom:calc(var(--dock) + env(safe-area-inset-bottom,0px))}
+  /* стрелка «наверх» справа внизу над панелью */
+  html.t1 .totop{display:grid!important;right:12px;bottom:calc(var(--dock) + 14px + env(safe-area-inset-bottom,0px));width:46px;height:46px;z-index:710}
+  html.t1.kb .totop{display:none!important}
+  /* значок «Демо-версия» в правом верхнем углу */
+  html.t1 .demo-flag,html.t1.demo-min .demo-flag{top:max(8px,env(safe-area-inset-top,0px));left:auto;right:max(10px,env(safe-area-inset-right,0px));transform:none;align-items:flex-end;width:auto;max-width:calc(100vw - 20px)}
+  html.t1 .demo-b{padding:5px 11px 5px 9px;font-size:10.5px}
+  /* первый экран: кнопки уехали в нижнюю панель, блок подбора виден сразу */
+  html.t1 .h5 .cta-row{display:none}
+  html.t1 .h5 .l-c{display:block!important;position:absolute;left:4%;right:4%;width:auto;top:auto;bottom:0;z-index:6}
+  html.t1 .h5 .stage{height:clamp(300px,42svh,380px)}
+  html.t1 .h5 .act{padding:10px 12px;border-radius:16px 16px 0 0}
+  html.t1 .h5 .act .qz-top h3{font-size:16px}
+  html.t1 .h5 .left{margin-top:4px;gap:10px}
+  html.t1 .off-wheel{top:6px;bottom:auto;right:max(10px,calc(50% - 170px));width:78px}
+  html.t1 .h5 .figure{box-shadow:none}
+  /* запись: контакты ниже формы */
+  html.t1 .fin-w{display:flex;flex-direction:column;gap:16px}
+  html.t1 .fin-l{display:contents}
+  html.t1 .fin-l>h2{order:1}html.t1 .fin-l>.lead{order:2}
+  html.t1 .lead-form{order:3}
+  html.t1 .fin-l>.contacts{order:4;margin-top:6px}
+  /* вопросы: сначала список, потом «Не нашли свой вопрос» */
+  html.t1 .faq-w{display:flex;flex-direction:column}
+  html.t1 .faq-r{order:1}html.t1 .faq-ph{order:2;margin-top:18px}
+  /* компактные блоки, чтобы помещались на экране */
+  html.t1 .sec .lead{font-size:14px;line-height:1.45}
+  html.t1 .ex-note{display:inline-block;margin:4px 0 0;padding:2px 9px;border:1px solid var(--line);border-radius:999px;font-size:11px;line-height:1.5;color:#cdbb9a}
+  html.t1 .rf-head p{display:none}
+  html.t1 .gf-s .rf-head h2{font-size:30px;margin:4px 0 8px}
+  html.t1 .gf-desk{padding:10px;gap:10px}
+  html.t1 .gf-folder{height:clamp(104px,15svh,128px)}
+  html.t1 .gf-hint span{display:none}
+  html.t1 .gf-mid.empty .gf-tray{min-height:30px;margin-bottom:0}
+  html.t1 .gf-desk{gap:12px 10px}
+  html.t1 .gf-hint b{font-size:15px}
+  html.t1 .rf-disc{margin-top:8px;font-size:12px}
+  html.t1 .masters .mx-head .lead,html.t1 .works .head2 .lead{display:none}
+  html.t1 .masters .mx-acc{height:clamp(200px,31svh,270px)}
+  html.t1 .masters .mi h3{font-size:30px}
+  html.t1 .works .dk-stack{height:clamp(250px,40svh,360px)}
+  html.t1 .works .head2{margin-bottom:6px}
+}
