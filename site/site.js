@@ -97,14 +97,6 @@ f.addEventListener('submit',function(e){e.preventDefault();err.hidden=true;
 });
 })();
 
-/* ====== Cookie ====== */
-(function(){var c=document.getElementById('cookie');if(!c)return;
-function get(){try{return localStorage.getItem('ck')}catch(e){return null}}
-function set(v){try{localStorage.setItem('ck',v)}catch(e){}c.hidden=true}
-if(!get())c.hidden=false;
-document.getElementById('ckOk').onclick=function(){set('all')};document.getElementById('ckNo').onclick=function(){set('necessary')};
-var o=document.getElementById('cookieOpen');if(o)o.onclick=function(){c.hidden=false};})();
-
 /* ====== Фишки: прогресс, параллакс, счётчики, пауза фона ====== */
 (function(){
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
