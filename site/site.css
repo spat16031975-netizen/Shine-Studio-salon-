@@ -435,7 +435,7 @@ body.mdl-open{overflow:hidden}
 .dk-l{position:relative;display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2svh,20px)}
 .dk-stack{position:relative;width:min(78vw,clamp(220px,30svh*.75*1.55,330px));aspect-ratio:3/4.1;height:clamp(300px,50svh,450px);width:auto;outline:none;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .dk-stack:focus-visible{outline:2px solid var(--accent);outline-offset:8px;border-radius:26px}
-.dk-c{position:absolute;inset:0;border-radius:26px;overflow:hidden;background:#d8dcc6;box-shadow:0 26px 44px -26px rgba(40,55,25,.7);transition:transform .5s var(--ease),opacity .4s;cursor:grab;touch-action:none;will-change:transform}
+.dk-c{position:absolute;inset:0;border-radius:26px;overflow:hidden;background:#d8dcc6;box-shadow:0 26px 44px -26px rgba(40,55,25,.7);transition:transform .5s var(--ease),opacity .4s;cursor:grab;touch-action:pan-y;will-change:transform}
 .dk-c img{width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
 .dk-c[data-pos="0"]{z-index:4}
 .dk-c[data-pos="1"]{z-index:3;transform:translateY(16px) scale(.95) rotate(-2.5deg);pointer-events:none}
