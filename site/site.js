@@ -32,9 +32,13 @@ var tabs=document.querySelector('.pr-tabs'),panel=document.querySelector('.pr-pa
 var fm=function(x){return (Math.round(x*10)/10).toString().replace('.',',')};
 function key(d,g,i){return d+'|'+g+'|'+i}
 function drawTabs(){tabs.innerHTML=D.map(function(d,i){return '<button type="button" role="tab" id="tab'+i+'" aria-selected="'+(i===cur)+'" aria-controls="prpanel" data-i="'+i+'" aria-expanded="'+(isM()?i===open:i===cur)+'" style="order:'+(2*i)+'">'+d.n+'<span>'+(function(n){var a=n%10,b=n%100;return n+(b>10&&b<15?' услуг':a==1?' услуга':a>1&&a<5?' услуги':' услуг')})(d.g.reduce(function(n,g){return n+g.i.length},0))+'</span></button>'}).join('')}
+var og={};
 function drawPanel(){var d=D[cur];if(isM()){panel.hidden=open<0;panel.style.order=2*Math.max(open,0)+1}else{panel.hidden=false;panel.style.order=''}panel.id='prpanel';panel.setAttribute('aria-labelledby','tab'+cur);
-  panel.innerHTML='<h3>'+d.n+'</h3><div class="pr-cols">'+d.g.map(function(g,gi){return '<div class="pr-grp"><div class="pr-gt">'+g.t+'</div>'+g.i.map(function(it,ii){var k=key(cur,gi,ii);
-    return '<label class="pr-row"><input type="checkbox" data-k="'+k+'"'+(sel[k]?' checked':'')+'><span class="pr-n">'+it.n+(it.m?'<small>Мастер: '+it.m+'</small>':'')+'</span><span class="pr-p">'+fm(it.p)+' BYN</span></label>'}).join('')+'</div>'}).join('')+'</div>'}
+  var single=d.g.length===1;
+  panel.innerHTML='<h3>'+d.n+'</h3><div class="pr-cols">'+d.g.map(function(g,gi){var gk=cur+'|'+gi,op=single||!!og[gk],n=0;
+    var rows=g.i.map(function(it,ii){var k=key(cur,gi,ii);if(sel[k])n++;
+    return '<label class="pr-row"><input type="checkbox" data-k="'+k+'"'+(sel[k]?' checked':'')+'><span class="pr-n">'+it.n+(it.m?'<small>Мастер: '+it.m+'</small>':'')+'</span><span class="pr-p">'+fm(it.p)+' BYN</span></label>'}).join('');
+    return '<div class="pr-grp'+(op?' open':'')+'">'+(single?'':'<button type="button" class="pr-gt" aria-expanded="'+op+'" data-g="'+gi+'"><span class="pr-gn">'+g.t+'</span><span class="pr-gc">'+(n?'выбрано '+n:g.i.length)+'</span></button>')+'<div class="pr-gb"'+(op?'':' hidden')+'>'+rows+'</div></div>'}).join('')+'</div>'}
 function items(){var out=[];Object.keys(sel).forEach(function(k){var a=k.split('|'),it=D[a[0]].g[a[1]].i[a[2]];out.push(it)});return out}
 function sum(){var it=items(),t=it.reduce(function(s,x){return s+x.p},0);
   var sl=document.getElementById('sumList');if(it.length){sl.innerHTML=Object.keys(sel).map(function(k){var a=k.split('|'),x=D[a[0]].g[a[1]].i[a[2]];return '<span class="sl-chip"><span>'+x.n+'</span><button type="button" data-rm="'+k+'" aria-label="Убрать из выбора: '+x.n.replace(/"/g,'')+'">×</button></span>'}).join('')}else sl.textContent='Пока ничего не выбрано';var rb=document.getElementById('sumReset');if(rb)rb.hidden=!it.length;
@@ -55,7 +59,8 @@ var rb=document.createElement('button');rb.type='button';rb.id='sumReset';rb.cla
 rb.addEventListener('click',function(){document.dispatchEvent(new CustomEvent('reset-calc'))});
 sl.addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(!b)return;delete sel[b.dataset.rm];drawPanel();sum()})})();
 tabs.addEventListener('keydown',function(e){if(e.key!=='ArrowDown'&&e.key!=='ArrowUp'&&e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;e.preventDefault();cur=(cur+(e.key==='ArrowDown'||e.key==='ArrowRight'?1:D.length-1))%D.length;drawTabs();drawPanel();document.getElementById('tab'+cur).focus()});
-panel.addEventListener('change',function(e){var k=e.target.dataset.k;if(!k)return;window.__master=null;window.__looks=null;if(e.target.checked)sel[k]=1;else delete sel[k];sum()});
+panel.addEventListener('click',function(e){var b=e.target.closest('.pr-gt');if(!b)return;var gk=cur+'|'+b.dataset.g,grp=b.parentNode;og[gk]=!og[gk];b.setAttribute('aria-expanded',og[gk]);grp.classList.toggle('open',!!og[gk]);grp.querySelector('.pr-gb').hidden=!og[gk]});
+panel.addEventListener('change',function(e){var k=e.target.dataset.k;if(!k)return;var gr=e.target.closest('.pr-grp'),gc=gr&&gr.querySelector('.pr-gc');if(gc){var c=gr.querySelectorAll('input:checked').length;gc.textContent=c?'выбрано '+c:gr.querySelectorAll('input').length}window.__master=null;window.__looks=null;if(e.target.checked)sel[k]=1;else delete sel[k];sum()});
 document.addEventListener('pick-master',function(e){sel={};window.__looks=null;window.__master=e.detail;drawPanel();sum()});
 document.addEventListener('pick-looks',function(e){sel={};window.__master=null;window.__looks=e.detail;drawPanel();sum()});
 (function(){var fc=document.getElementById('fCalc');if(!fc||document.getElementById('fCalcX'))return;var x=document.createElement('button');x.type='button';x.id='fCalcX';x.className='f-calc-x';x.textContent='Сбросить выбор';x.hidden=true;x.addEventListener('click',function(){document.dispatchEvent(new CustomEvent('reset-calc'))});fc.parentNode.insertBefore(x,fc.nextSibling)})();
@@ -617,3 +622,14 @@ window.addEventListener('scroll',function(){if(!p.hidden)close()},{passive:true}
 document.addEventListener('focusin',function(e){if(e.target.matches&&e.target.matches('input:not([type=checkbox]),textarea,select')){clearTimeout(t);r.classList.add('kb')}});
 document.addEventListener('focusout',function(){clearTimeout(t);t=setTimeout(function(){r.classList.remove('kb')},250)});
 })();
+
+
+/* ====== Блок подбора: на телефоне под бегущей строкой ====== */
+(function(){var lc=document.querySelector('.l-c'),slot=document.getElementById('qzSlot'),stage=document.querySelector('.stage');if(!lc||!slot||!stage)return;
+var mq=matchMedia('(max-width:820px)');
+function place(){if(mq.matches){if(lc.parentNode!==slot)slot.appendChild(lc)}else if(lc.parentNode!==stage)stage.appendChild(lc)}
+place();mq.addEventListener('change',place)})();
+
+/* ====== «Заказать звонок»: подсвечиваем форму после перехода ====== */
+(function(){document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-call]');if(!a)return;
+var f=document.getElementById('leadForm');if(!f)return;setTimeout(function(){f.classList.remove('pulse');void f.offsetWidth;f.classList.add('pulse')},800)})})();
