@@ -91,7 +91,7 @@ f.addEventListener('submit',function(e){e.preventDefault();err.hidden=true;
   if(n.length<2){err.textContent='Введите имя.';err.hidden=false;name.focus();return}
   if(d.length<12){err.textContent='Введите телефон полностью: +375 (XX) XXX-XX-XX.';err.hidden=false;phone.focus();return}
   if(f.website.value){f.hidden=true;ok.hidden=false;return}   /* скрытое поле для ботов */
-  var data={name:n,phone:phone.value,ads:document.getElementById('f-ads').checked,consent:true,calc:window.__calc||[],master:window.__master||null,calcTotalFrom:window.__calcTotal||0,page:location.href,time:new Date().toISOString()};
+  var data={name:n,phone:phone.value,consent:true,calc:window.__calc||[],master:window.__master||null,calcTotalFrom:window.__calcTotal||0,page:location.href,time:new Date().toISOString()};
   console.log('Заявка',data);
   if(LEAD_URL){try{fetch(LEAD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(function(){})}catch(x){}}
   if(YM_ID&&window.ym){try{window.ym(YM_ID,'reachGoal','lead')}catch(x){}}
@@ -99,7 +99,7 @@ f.addEventListener('submit',function(e){e.preventDefault();err.hidden=true;
   setTimeout(function(){if(bs)bs.textContent=bt;
   btn.hidden=true;ok.hidden=false;f.querySelectorAll('input').forEach(function(i){i.disabled=true});
   document.dispatchEvent(new CustomEvent('reset-calc'));
-  setTimeout(function(){name.value='';phone.value='';cons.checked=false;document.getElementById('f-ads').checked=false;f.querySelectorAll('input').forEach(function(i){i.disabled=false});btn.disabled=true;btn.hidden=false;ok.hidden=true;if(hint)hint.hidden=false},9000);
+  setTimeout(function(){name.value='';phone.value='';cons.checked=false;f.querySelectorAll('input').forEach(function(i){i.disabled=false});btn.disabled=true;btn.hidden=false;ok.hidden=true;if(hint)hint.hidden=false},9000);
   },900);
 });
 })();
